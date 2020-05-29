@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ang">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symulacja ruchów planety</title>
+    <style>
+        body
+        {
+            background-image: url("starry-sky-1654074.jpg");
+            background-size: cover;
+        }
+        #head
+        {
+            background-color:rgba(255, 255, 255, 0.356);
+            text-align: center;
+        }
+        #dane
+        {
+            background-color:rgba(255, 255, 255, 0.356);
+            width: 350px;
+            height: 80%;
+            position: absolute;
+            padding-left: 10px;
+            padding-right: 10px;
+            color:rgb(252, 252, 252);
+
+        }
+        #slider
+        {
+            margin-bottom:20px;
+        }
+        #canvas
+        {
+            right: 10px;
+            height: 80%;
+            position: absolute;
+            left: 400px;
+            background:rgba(21, 36, 49, 0.644);
+        }
+        #planet
+        {
+            width: 3px;
+            height: 3px;
+            position: relative;
+            top: 50%;
+            left: 75%;
+        }
+        #sun
+        {
+            width: 7px;
+            height: 7px;
+            position: relative;
+            top: 50%;
+            left: 50%;
+        }
+        #footer
+        {
+            background-color:rgba(0, 0, 0, 0.603);
+            text-decoration-color: azure;
+            text-align: left;
+            bottom: 0%;
+            position:absolute;
+            height: 50px;
+            width: 100%;
+        }
+        .button 
+        {
+            background-color: rgb(199, 199, 199);
+            border: none;
+            color: rgb(199, 199, 199);
+            padding: 5px 10px;
+            text-align: center;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            transition-duration: 0.2s;
+            cursor: pointer;
+        }
+        .button2 
+        {
+            background-color: rgb(199, 199, 199);
+            color: black;
+            border: 2px solid #555555;
+        }
+
+        .button2:hover 
+        {
+            background-color: #555555;
+            color: rgb(199, 199, 199);
+        }
+        .slider 
+        {
+            height: 5px;
+            border-radius: 5px;
+            background: #d3d3d3;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+        .slider:hover 
+        {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb 
+        {
+            width: 10px;
+            height: 10px;
+            background: black;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb 
+        {
+            width: 10px;
+            height: 10px;
+            background: black;
+            cursor: pointer;
+        }
+        
+    </style>
+    
+</head>
+<body>
+    <div id = "head">
+        <h1 style = "color : rgb(252, 252, 252)">Symulacja ruchów planety</h1>
+    </div>
+   <div id = "canvas">
+        <div id = "planet">
+            <svg height="20" width="20">
+                <circle cx="5" cy="5" r="4" fill="white"></svg>
+        </div>
+        <div id = "sun">
+            <svg height="50" width="50">
+            <circle cx="10" cy="10" r=7 stroke="yellow" stroke-width="3" fill="yellow">
+          </svg></div>
+    </div>
+    <div id="dane">
+        <h1>Stałe</h1>
+        <p>
+            G (przyspieszenie grawitacyjne) = 6.67 <span>&#215;</span>  10<sup>-11</sup> <math xmlns="http://www.w3.org/1998/Math/MathML"> <mfrac bevelled="true"> <mrow> <mn>m</mn> </mrow> <mn>s</mn> </mfrac> </math><sup>2</sup> <br>
+            Położenie początkowe X = 15 <span>&#215;</span> 10<sup>-11</sup> m <br>
+            Położenie początkowe Y = 0 m
+        </p>
+        <h1>Zmienne</h1> 
+        
+        <label for="M">Masa słońca =</label> <br>
+        <input type="range" class="slider" id="M" min="1" max="20" oninput="myFunction()"> <span id = "suwak1"></span><span>&#215;</span>  10<sup>30</sup> kg <br>
+
+        <label for="speedX">Prędkość początkowa X =</label> <br>
+        <input type="range" class="slider" id="speedX" min="0" max="50000" oninput="myFunction2()"> <span id = "suwak2"></span><math xmlns="http://www.w3.org/1998/Math/MathML"> <mfrac bevelled="true"> <mrow> <mn>m</mn> </mrow> <mn>s</mn> </mfrac> </math><br>
+
+        <label for="speedY">Prędkość początkowa Y =</label> <br>
+        <input type="range" class="slider"id="speedY" min="0" max="50000" oninput="myFunction3()"><span id = "suwak3"></span><math xmlns="http://www.w3.org/1998/Math/MathML"> <mfrac bevelled="true"> <mrow> <mn>m</mn> </mrow> <mn>s</mn> </mfrac> </math><br>
+
+        <label for="dt">Delta czasu =</label> <br>
+        <input type="range" class="slider"id="dt" min="7200" max="150000" oninput="myFunction4()"><span id = "suwak4"></span> s <br>
+        <p>
+            <button class="button button2" onclick="orbita()">Oblicz</button> <button class="button button2" onclick="end()">Resetuj</button>
+           
+        </p>  
+        <p style="text-align: justify;">
+            <br>
+            Należy wprowadzić odpowiednie dane do obliczeń. Po zatwierdzeniu program stworzy animację, której prędkość można modyfikować podczas wykonywania się animacji poprzez zmianę wartości delty czasu. Aby ponownie móc wprowadzić dane należy zresetować program.
+        </p> 
+        
+    </div>
+
+    <div id = "footer">    
+        
+        <p style="color:rgb(82, 82, 82)">Projekt zrealizowany dla V Liceum Ogólnokształcącego, Joanna Wójcicka</p>
+    </div>
+
+
+    <script>
+            var masa, vx, vy, ax, ay, dt, jd;
+            function myFunction() {
+                masa = document.getElementById("M").value;
+                document.getElementById("suwak1").innerHTML = masa;
+            }
+            function myFunction2() {
+                vx = document.getElementById("speedX").value;
+                document.getElementById("suwak2").innerHTML = vx;
+            }
+            function myFunction3() {
+                vy = document.getElementById("speedY").value;
+                document.getElementById("suwak3").innerHTML = vy;
+                console.log("vy"+vy)
+            }
+            function myFunction4() {
+                dt = document.getElementById("dt").value;
+                document.getElementById("suwak4").innerHTML = dt;
+            }
+
+            function end()
+            {
+                jd = -1;
+            }
+
+            var g = 6.67 * (10**(-11)), x = 15*(10**10), y = 0, r = (x**2 + y**2)**(1/2);
+
+            function orbita()
+            {
+                document.getElementById("speedX").disabled = true;
+                document.getElementById("speedY").disabled = true;
+                document.getElementById("M").disabled = true;
+
+                vx = parseInt(document.getElementById("speedX").value);
+                vy = parseInt(document.getElementById("speedY").value);
+                masa = parseInt(document.getElementById("M").value)* (10**30);
+                dt = parseInt(document.getElementById("dt").value);
+                
+                var x = 15*(10**10);
+                var y = 0;
+                r = (x**2 + y**2)**(1/2)
+                ax = g*masa*x/(r**3);
+                ay = g*masa*y/(r**3);
+                lol = 1;
+                var elem = document.getElementById("planet");
+                var t = setInterval(frame, 200);
+                var yscale = 100*y/(2*(10**11));
+                var xscale = 100*x/(2*(10**11));
+                elem.style.top = 50 + 50 * yscale /100 + '%'; 
+                elem.style.left = 50 +  50 * xscale /100 + '%';
+                function frame() 
+                {
+                    if (50 + 50 * yscale /100 >= 100  ||50 + 50 * yscale /100 <= 0|| 50 + 50 * xscale /100 >= 99 ||50 + 50 * xscale /100 <= 0 || jd == -1) 
+                    {
+                            document.getElementById("speedX").disabled = false;
+                            document.getElementById("speedY").disabled = false;
+                            document.getElementById("M").disabled = false;
+                            x = 15*(10**10);
+                            y = 0;
+                            yscale = 100*y/(2*(10**11));
+                            xscale = 100*x/(2*(10**11));
+                            elem.style.top = 50 + 50 * yscale /100 + '%'; 
+                            elem.style.left = 50 +  50 * xscale /100 + '%';
+                            clearInterval(t);                         
+                    } 
+                    else 
+                    { 
+                        y = y+vy*dt;
+                        x = x+vx*dt;
+                        yscale = 100*y/(2*(10**11));
+                        xscale = 100*x/(2*(10**11));
+                        r = (x**2 + y**2)**(1/2)
+                        ax = -g*masa*x/(r**3);
+                        ay = -g*masa*y/(r**3);
+                        console.log(ay);
+                        console.log(ax);
+                        vx = vx + ax*dt;
+                        vy = vy + ay*dt; 
+                        elem.style.top = 50 + 50 * yscale /100 + '%'; 
+                        elem.style.left = 50 +  50 * xscale /100 + '%';
+                    }
+                }
+
+            }
+
+            
+        </script>
+  
+
+
+    
+</body>
+</html>
